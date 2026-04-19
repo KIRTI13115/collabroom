@@ -15,10 +15,10 @@ const MeetingSetup = ({
 }: {
   setIsSetupComplete: (value: boolean) => void;
 }) => {
+  // https://getstream.io/video/docs/react/guides/call-and-participant-state/#call-state
   const { useCallEndedAt, useCallStartsAt } = useCallStateHooks();
   const callStartsAt = useCallStartsAt();
   const callEndedAt = useCallEndedAt();
-
   const callTimeNotArrived =
     callStartsAt && new Date(callStartsAt) > new Date();
   const callHasEnded = !!callEndedAt;
@@ -27,32 +27,27 @@ const MeetingSetup = ({
 
   if (!call) {
     throw new Error(
-      'useCall must be used within a StreamCall component.',
+      'useStreamCall must be used within a StreamCall component.',
     );
   }
 
+  // https://getstream.io/video/docs/react/ui-cookbook/replacing-call-controls/
   const [isMicCamToggled, setIsMicCamToggled] = useState(false);
 
   useEffect(() => {
-    if (call.camera && call.microphone) {
-      if (isMicCamToggled) {
-        call.camera.disable();
-        call.microphone.disable();
-      } else {
-        call.camera.enable();
-        call.microphone.enable();
-      }
+    if (isMicCamToggled) {
+      call.camera.disable();
+      call.microphone.disable();
+    } else {
+      call.camera.enable();
+      call.microphone.enable();
     }
-  }, [isMicCamToggled]);
-
-  const formattedStartTime = callStartsAt
-    ? new Date(callStartsAt).toLocaleString()
-    : '';
+  }, [isMicCamToggled, call.camera, call.microphone]);
 
   if (callTimeNotArrived)
     return (
       <Alert
-        title={`Your Meeting has not started yet. It is scheduled for ${formattedStartTime}`}
+        title={`Your Meeting has not started yet. It is scheduled for ${callStartsAt.toLocaleString()}`}
       />
     );
 
@@ -67,11 +62,9 @@ const MeetingSetup = ({
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-3 text-white">
       <h1 className="text-center text-2xl font-bold">Setup</h1>
-
       <VideoPreview />
-
       <div className="flex h-16 items-center justify-center gap-3">
-        <label className="flex items-center gap-2 font-medium">
+        <label className="flex items-center justify-center gap-2 font-medium">
           <input
             type="checkbox"
             checked={isMicCamToggled}
@@ -79,14 +72,13 @@ const MeetingSetup = ({
           />
           Join with mic and camera off
         </label>
-
         <DeviceSettings />
       </div>
-
       <Button
         className="rounded-md bg-green-500 px-4 py-2.5"
-        onClick={async () => {
-          await call.join();
+        onClick={() => {
+          call.join();
+
           setIsSetupComplete(true);
         }}
       >

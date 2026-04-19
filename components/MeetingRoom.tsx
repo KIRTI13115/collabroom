@@ -1,5 +1,5 @@
 'use client';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import {
   CallControls,
   CallParticipantsList,
@@ -8,7 +8,6 @@ import {
   PaginatedGridLayout,
   SpeakerLayout,
   useCallStateHooks,
-  useCall,
 } from '@stream-io/video-react-sdk';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Users, LayoutList } from 'lucide-react';
@@ -33,33 +32,9 @@ const MeetingRoom = () => {
   const [layout, setLayout] = useState<CallLayoutType>('speaker-left');
   const [showParticipants, setShowParticipants] = useState(false);
   const { useCallCallingState } = useCallStateHooks();
+
+  // https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
   const callingState = useCallCallingState();
-
-
-  const call = useCall(); // ✅ get call instance
-
-  // ✅ START RECORDING WHEN USER JOINS
-  useEffect(() => {
-    const startRecording = async () => {
-      if (!call) return;
-
-      try {
-        // prevent multiple triggers
-        if (!call.state.recording) {
-          await call.startRecording();
-          console.log("Recording started");
-        }
-      } catch (err) {
-        console.error("Recording error:", err);
-      }
-    };
-
-    if (callingState === CallingState.JOINED) {
-      startRecording();
-    }
-  }, [callingState, call]);
-  // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
-  
 
   if (callingState !== CallingState.JOINED) return <Loader />;
 
@@ -76,7 +51,6 @@ const MeetingRoom = () => {
 
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
-      
       <div className="relative flex size-full items-center justify-center">
         <div className=" flex size-full max-w-[1000px] items-center">
           <CallLayout />
