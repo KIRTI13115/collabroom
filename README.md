@@ -29,3 +29,51 @@ The web app will comprise of following features:
 7. Secure real time functionality
 8. Responsive Design
 git fetch upstream
+
+##  How to Run the Project Locally
+
+Follow the steps below to set up and run the project on your local machine.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+```
+
+### 2. Install Dependencies
+
+Make sure you have **Node.js (v18 or above)** installed.
+
+```bash
+npm install
+```
+
+### 3. Setup Environment Variables
+
+Create a `.env.local` file in the root directory and add the following:
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+CLERK_SECRET_KEY=your_secret_key
+
+NEXT_PUBLIC_STREAM_API_KEY=your_stream_key
+STREAM_SECRET_KEY=your_stream_secret
+```
+
+### 4. Run the Development Server
+
+```bash
+npm run dev
+```
+
+### 5. Open in Browser
+
+Go to:
+
+```
+http://localhost:3000
+```
+
+---
+
