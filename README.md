@@ -15,8 +15,7 @@ Tech Stack
 2. TypeScript
 3. Clerk
 4. getstream
-5. shadcn
-6. Tailwind CSS
+5. Tailwind CSS
 
 Features
 The web app will comprise of following features:
